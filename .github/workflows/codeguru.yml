@@ -19,8 +19,8 @@ jobs:
       continue-on-error: true
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: arn:aws:iam::048169001733:role/GuruGitHubCICDRole
-        aws-region: us-west-2
+        role-to-assume: arn:aws:iam::283551069584:role/backend_githubaction_role
+        aws-region: us-east-1
     
     - uses: actions/checkout@v2
       if: steps.iam-role.outcome == 'success'
@@ -40,18 +40,18 @@ jobs:
       if: steps.iam-role.outcome == 'success'
       continue-on-error: false
       with:          
-        s3_bucket: codeguru-reviewer-github-profiler-demo-048169001733-uw2
+        s3_bucket: codeguru-reviewer-incred-uat-01
         build_path: ./target/classes
 
     - name: Store SARIF file
       if: steps.iam-role.outcome == 'success'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: SARIF_recommendations
         path: ./codeguru-results.sarif.json
 
     - name: Upload review result
       if: steps.iam-role.outcome == 'success'
-      uses: github/codeql-action/upload-sarif@v1
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: codeguru-results.sarif.json
